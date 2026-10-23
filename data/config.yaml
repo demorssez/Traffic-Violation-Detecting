@@ -1,0 +1,16 @@
+model_path: model/final_model.pt
+track_path: data/custom_bytetrack.yaml
+video_path: data/Traffic_IP_Camera_video.mp4
+output_path: output/result.mp4
+offenders: output/offenders
+
+speed_limit: 40
+area_length: 18
+warp_size: [210, 600]
+area_points:
+  - [670, 248]
+  - [1272, 248]
+  - [1224, 681]
+  - [255, 678]
+min_samples: 10
+speed_window: 20
