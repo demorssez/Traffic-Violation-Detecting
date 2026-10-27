@@ -3,6 +3,7 @@ track_path: data/custom_bytetrack.yaml
 video_path: data/Traffic_IP_Camera_video.mp4
 output_path: output/result.mp4
 offenders: output/offenders
+csv_path: logs/violations.csv
 
 speed_limit: 40
 area_length: 18
