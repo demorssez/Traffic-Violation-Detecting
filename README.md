@@ -11,6 +11,7 @@ Computer vision pipeline that detects vehicles from traffic cameras, estimates t
 - **Speed estimation** via perspective transform and moving average the last N frames
 - **Offender capture**: when a vehicle exceeds the speed limit, snapshot with the plate number and speed is saved
 - **License plate OCR** on the offender crop
+- **Code is logged**, and violators are recorded in a separate CSV file
 
 ## How it works
 
@@ -27,6 +28,9 @@ Computer vision pipeline that detects vehicles from traffic cameras, estimates t
 main.py
 config.yaml
 requirements.txt
+logs/
+    info.log
+    violations.csv
 data/
     config.yaml
     custom_bytetrack.yaml
@@ -53,9 +57,13 @@ Speed accuracy depends directly on the zone calibration. Pick four points on the
 - OCR currently uses Apple Vision (`ocrmac`), so plate reading works on macOS only. It runs on the whole vehicle crop rather than a dedicated plate detector
 - Single camera, fixed viewpoint, flat road
 
+## Update
+
+- Added code logging to 'logs' folder and recorded violators into a CSV file
+
 ## Roadmap
 
-- [ ] Violation logging (CSV / SQL)
+- ~~[ ] Violation logging (CSV / SQL)~~
 - [ ] Unit tests for geometry and speed
 - [ ] REST API (FastAPI)
 - [ ] Docker image
