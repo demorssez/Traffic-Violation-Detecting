@@ -1,5 +1,8 @@
 import time
 import cv2
+from src.logger_config import setup_logger
+from src.export import append_violation
+from loguru import logger
 from pathlib import Path
 from ultralytics import YOLO
 from src.config import Config
@@ -20,41 +23,55 @@ class Pipeline:
         self.windows = {}
 
     def run(self):
+        setup_logger()
+        frame_id = 1
         start = time.time()
         cfg = self.cfg
 
         cap = cv2.VideoCapture(cfg.video_path)
         fps = cap.get(cv2.CAP_PROP_FPS)
+        total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
         size = (int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+        Path(cfg.csv_path).parent.mkdir(parents=True, exist_ok=True)
         Path(cfg.output_path).parent.mkdir(parents=True, exist_ok=True)
         Path(cfg.offenders).mkdir(parents=True, exist_ok=True)
         out = cv2.VideoWriter(cfg.output_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
         self.speed = SpeedEstimator(self.tf, fps, cfg.speed_window)
-
-        while cap.isOpened():
-            success, frame = cap.read()
-            if not success:
-                break
-
-            clean = frame.copy()
-            result = self.model.track(
-                frame, tracker=cfg.track_path, persist=True, verbose=False)[0]
-            self._process(frame, clean, result)
-
-            out.write(frame)
-            if self.show:
-                cv2.imshow('Main', frame)
-                for tid, shot in self.windows.items():
-                    cv2.imshow(f'Offender {tid}', shot)
-                if cv2.waitKey(1) & 0xFF == ord('q'):
+        
+        try:
+            while cap.isOpened():
+                success, frame = cap.read()
+                if not success:
+                    logger.info('Video stream ended')
                     break
-
-        cap.release()
-        out.release()
-        cv2.destroyAllWindows()
-
-        end = round(time.time() - start, 1)
-        print(f'Execution time: {int(end // 60)}:{int(end % 60):02d} min')
+                
+                clean = frame.copy()
+                result = self.model.track(
+                    frame, tracker=cfg.track_path, persist=True, verbose=False)[0]
+                self._process(frame, clean, result)
+                
+                fps_i = max(1, round(fps))
+                if frame_id % fps_i == 0:
+                    logger.debug(f'Frame: {frame_id}/{total} | Elapsed {round(time.time() - start)} sec')
+                frame_id += 1
+                
+                out.write(frame)
+                if self.show:
+                    cv2.imshow('Main', frame)
+                    for tid, shot in self.windows.items():
+                        cv2.imshow(f'Offender {tid}', shot)
+                    if cv2.waitKey(1) & 0xFF == ord('q'):
+                        break
+        
+        except Exception:
+            logger.exception('Playback error')
+            
+        finally:
+            cap.release()
+            out.release()
+            cv2.destroyAllWindows()
+            end = round(time.time() - start, 1)
+            logger.debug(f'Execution time: {int(end // 60)}:{int(end % 60):02d} min')
 
     def _process(self, frame, clean, result):
         boxes = result.boxes
@@ -92,4 +109,6 @@ class Pipeline:
         self.windows[id] = shot
         cv2.imwrite(str(Path(self.cfg.offenders) / f'offender_{id}.jpg'), shot)
         self.registry.set_offender(id)
-        print(f'Offender found: ID {id}, Plate {plate}, Speed {speed:.1f} km/h')
+        logger.success(f'Offender found: ID {id}, Plate {plate}, Speed {speed:.1f} km/h | Frame saved!')
+        append_violation(self.cfg.csv_path, id, plate, speed)
+        
