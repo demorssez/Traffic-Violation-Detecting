@@ -8,6 +8,7 @@ class Config:
     video_path: str
     output_path: str
     offenders: str
+    csv_path: str
     speed_limit: float
     area_length: float
     area_points: list
