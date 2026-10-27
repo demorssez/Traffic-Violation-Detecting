@@ -3,3 +3,4 @@ opencv-python==5.0.0.93
 numpy==2.0.2
 pillow==11.3.0
 ocrmac==1.0.1
+loguru==0.7.3
