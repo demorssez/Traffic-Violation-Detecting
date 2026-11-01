@@ -26,7 +26,7 @@ def run_job(video, config):
 
 
 @app.get('/offenders/')
-def read_offenders(cfg: str = '/Users/demorssez/py/traffic-violation-detecting/data/config.yaml'):
+def read_offenders(cfg: str = 'data/config.yaml'):
     config = load_config(cfg)
     if not Path(config.csv_path).exists():
         return []
@@ -53,6 +53,6 @@ def start_proccessing(data: PutData, background: BackgroundTasks):
 
 
 @app.get('/logs/')
-def read_logs(logs_path: str = '/Users/demorssez/py/traffic-violation-detecting/logs/info.log'):
+def read_logs(logs_path: str = 'logs/info.log'):
     with open(Path(logs_path), 'r', encoding='utf-8') as f:
         return f.read()

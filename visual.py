@@ -15,9 +15,9 @@ actions = 'Video Processing', 'Read Offenders', 'Show Image Offender'
 select = st.selectbox('Select an action', list(actions))
 with st.form('Optional Data'):
     if select == 'Video Processing':
-        video = st.text_input('Video path', value = '/Users/demorssez/py/traffic-violation-detecting/data/Traffic_IP_Camera_video.mp4')
+        video = st.text_input('Video path', value = 'data/Traffic_IP_Camera_video.mp4')
         st.markdown('Default Value Automatically Inserted')
-        config = st.text_input('Config Path',  value = '/Users/demorssez/py/traffic-violation-detecting/data/config.yaml')
+        config = st.text_input('Config Path',  value = 'data/config.yaml')
         st.markdown('Default Value Automatically Inserted')
 
         if st.form_submit_button('Execute'):
@@ -50,7 +50,7 @@ with st.form('Optional Data'):
                 
                     
     elif select == 'Read Offenders':
-        config = st.text_input('Config Path', value = '/Users/demorssez/py/traffic-violation-detecting/data/config.yaml')
+        config = st.text_input('Config Path', value = 'data/config.yaml')
         st.markdown('Default Value Automatically Inserted')
         
         if st.form_submit_button('Execute'):
