@@ -1,4 +1,4 @@
-model_path: model/final_model.pt
+model_path: model/final_model.onnx
 track_path: data/custom_bytetrack.yaml
 video_path: data/Traffic_IP_Camera_video.mp4
 output_path: output/result.mp4

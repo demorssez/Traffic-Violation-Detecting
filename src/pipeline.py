@@ -16,7 +16,7 @@ class Pipeline:
         self.cfg = cfg
         self.show = show
         self.write = write
-        self.model = YOLO(cfg.model_path)
+        self.model = YOLO(cfg.model_path, task='detect')
         self.tf = TransformView(cfg.area_points, cfg.warp_size, cfg.area_length)
         self.registry = OffenderRegistry(cfg.min_samples)
         self.windows = {}
@@ -47,7 +47,7 @@ class Pipeline:
                 
                 clean = frame.copy()
                 result = self.model.track(
-                    frame, tracker=cfg.track_path, persist=True, verbose=False, vid_stride=2)[0]
+                    frame, tracker=cfg.track_path, persist=True, verbose=False, vid_stride=2, device='cpu')[0]
                 self._process(frame, clean, result)
                 
                 fps_i = max(1, round(fps))

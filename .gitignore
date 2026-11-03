@@ -2,3 +2,7 @@ __pycache__/
 *.jpg
 .venv/
 .DS_Store
+.gitignore
+Dockerfile
+*.pt
+entrypoing.sh
