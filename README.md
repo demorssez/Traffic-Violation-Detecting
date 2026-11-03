@@ -63,7 +63,7 @@ Processing runs in a background task, so the `POST` returns immediately. Only on
 
 Streamlit dashboard on top of the API: start processing, watch the logs, browse offenders and open their snapshots.
 
-<img width="1401" height="954" alt="Снимок экрана — 2026-11-01 в 23 42 38" src="https://github.com/user-attachments/assets/15e83555-1ec7-4dba-9a70-c693346668a2" />
+<img width="1435" height="1011" alt="Снимок экрана — 2026-11-03 в 18 49 22" src="https://github.com/user-attachments/assets/45d11511-a8b9-4d32-8c07-be970dc316bc" />
 
 For interaction with API and Visual dashboard: http://localhost:8501/
 
@@ -76,14 +76,14 @@ uvicorn main_api:app --reload & streamlit run visual.py
 - Added code logging to 'logs' folder and recorded violators into a CSV file
 - API
 - Streamlit dashboard
+- Converted model format to ONNX, resulting in a 2.5x speedup in processing
 
 ## Roadmap
 
 - [x] Violation logging (CSV / SQL)
 - [x] REST API (FastAPI)
 - [x] WEB interface for interaction
-- [ ] Docker image
-- [ ] ONNX export
+- [x] ONNX export
 
 ## Tech stack
 
